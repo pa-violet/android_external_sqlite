@@ -2,6 +2,7 @@ cc_library_static {
     name: "libsqlite3_android",
     vendor_available: true,
     host_supported: true,
+    cflags: ["-DSQLITE_ENABLE_ICU"],
     srcs: [
         "PhoneNumberUtils.cpp",
         "OldPhoneNumberUtils.cpp",
@@ -13,6 +14,12 @@ cc_library_static {
         "libicuuc",
         "libicui18n",
     ],
+    target: {
+        vendor: {
+            cflags: ["-USQLITE_ENABLE_ICU"],
+            exclude_shared_libs: ["libicuuc", "libicui18n"],
+        },
+    },
     export_include_dirs: ["."],
 }
 

@@ -36,6 +36,7 @@ cc_defaults {
         "-DSQLITE_OMIT_LOAD_EXTENSION",
         "-DSQLITE_DEFAULT_FILE_PERMISSIONS=0600",
         "-DSQLITE_SECURE_DELETE",
+        "-DSQLITE_ENABLE_BATCH_ATOMIC_WRITE",
         "-Wno-unused-parameter",
         "-Werror",
     ],
@@ -53,7 +54,6 @@ cc_defaults {
     target: {
         android: {
             cflags: [
-                "-DSQLITE_ENABLE_ICU",
                 "-DUSE_PREAD64",
                 "-Dfdatasync=fdatasync",
                 "-DHAVE_MALLOC_H=1",
@@ -67,6 +67,9 @@ cc_library {
     name: "libsqlite",
     defaults: ["sqlite-defaults"],
     vendor_available: true,
+    vndk: {
+        enabled: true,
+    },
 
     srcs: ["sqlite3.c"],
 
@@ -79,6 +82,7 @@ cc_library {
                 "libicuuc",
                 "libicui18n",
             ],
+            cflags: ["-DSQLITE_ENABLE_ICU"],
 
             // include android specific methods
             whole_static_libs: ["libsqlite3_android"],
@@ -100,6 +104,10 @@ cc_library {
         },
         windows: {
             enabled: true,
+        },
+        vendor: {
+            cflags: ["-USQLITE_ENABLE_ICU"],
+            exclude_shared_libs: ["libicuuc", "libicui18n"],
         },
     },
 
